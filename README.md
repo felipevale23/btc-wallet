@@ -1,11 +1,12 @@
 # Crypto Wallet C
 
+Version: **0.1.0**
+
 A minimal implementation of BIPs 32, 39, and 44 in C — generate Bitcoin wallets from mnemonics, derive keys, and manage seeds with no heavy libraries.
 
 ---
 
 ## Summary
-
 - [About](#about)
 - [Features](#features)
 - [Folder Structure](#folder-structure)
@@ -26,7 +27,6 @@ It demonstrates the full process of wallet creation — from random entropy to m
 - Works only with basic C libraries
 
 ## Folder Structure
-
 btc-wallet-c/
 ├── src/              # C source files
 │   ├── main.c        # Program entry point
@@ -74,13 +74,49 @@ make
 ./crypto-wallet-c 128   # 128 bits entropy (12 words)
 ./crypto-wallet-c 256   # 256 bits entropy (24 words)
 ```
+### 🔥 Most direct comparison:
+- 128 bits (12 words)
+    - It is already very secure.
+    - Attacking a key is practically impossible today.
+    - Easier to write down/memorize.
+    - Widely used in wallets such as Electrum, Ledger, Trezor.
+
+- 256 bits (24 words)
+    - Absurd security (it is “overkill” today).
+    - Takes much longer to generate and process.
+    - Harder to write down (more chance of error).
+    - Requires more patience from the user.
+
+### Relation between Entropy and Number of Words (BIP-39)
+
+| Entropy (bits) | Checksum (bits) | Total bits | Number of words |
+|:--------------:|:---------------:|:----------:|:---------------:|
+| 128            | 4               | 132        | 12              |
+| 160            | 5               | 165        | 15              |
+| 192            | 6               | 198        | 18              |
+| 224            | 7               | 231        | 21              |
+| 256            | 8               | 264        | 24              |
+
+#### Formulas used
+
+- `checksum_bits = entropy_bits / 32`
+- `total_bits = entropy_bits + checksum_bits`
+- `words = total_bits / 11`
+
+#### Quick summary
+
+- **128 bits** → **12 words**
+- **160 bits** → **15 words**
+- **192 bits** → **18 words**
+- **224 bits** → **21 words**
+- **256 bits** → **24 words**
 
 ## Project Goals
 Learn and demonstrate how Bitcoin key derivation works at the byte level
 Create a minimalistic implementation without external cryptographic libraries
 Help others understand BIP-32, BIP-39, and BIP-44 through readable C code
 
-Roadmap
+## Roadmap
  ✅ Entropy generation and checksum
 
  ✅ Mnemonic creation from wordlist
@@ -95,5 +131,13 @@ Roadmap
 
  🔳 Address generation (P2PKH / P2WPKH)
 
-License
+### BIPs
+| BIP     | Nome                                                | O que implementamos?                                          |
+|---------|-----------------------------------------------------|---------------------------------------------------------------|
+| BIP-39  | Mnemonic code for generating deterministic keys    | ✅ Geramos a mnemônica a partir de entropia + checksum + wordlist |
+| BIP-32  | Hierarchical Deterministic Wallets                 | ⚠️ Em andamento (derivar chave privada da seed)               |
+| BIP-44  | Multi-account hierarchy for deterministic wallets  | ❌ Ainda não implementado                                      |
+
+
+## License
 MIT License.
